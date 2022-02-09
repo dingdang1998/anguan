@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oket.ccic.mapper.ComputingLogMapper">
+    <resultMap id="ComputingLogBase" type="com.oket.ccic.entity.ComputingLogBase">
+        <result property="id" column="id" javaType="java.lang.Long"/>
+        <result property="verificationNo" column="verification_no" javaType="java.lang.String"/>
+        <result property="shipName" column="ship_name" javaType="java.lang.String"/>
+        <result property="oilName" column="oil_name" javaType="java.lang.String"/>
+        <result property="verificationAddressId" column="verification_address_id" javaType="java.lang.String"/>
+        <result property="verificationAddressName" column="verification_address_name" javaType="java.lang.String"/>
+        <result property="vcfMethod" column="vcf_method" javaType="java.lang.String"/>
+        <result property="type" column="type" javaType="java.lang.Byte"/>
+        <result property="type2" column="type2" javaType="java.lang.Byte"/>
+        <result property="bucket" column="bucket" javaType="java.lang.Integer"/>
+        <result property="stere" column="stere" javaType="java.math.BigDecimal"/>
+        <result property="metricTon" column="metric_ton" javaType="java.math.BigDecimal"/>
+        <result property="longTon" column="long_ton" javaType="java.math.BigDecimal"/>
+        <result property="palStere" column="pal_stere" javaType="java.math.BigDecimal"/>
+        <result property="palMt" column="pal_mt" javaType="java.math.BigDecimal"/>
+        <result property="palSterePercentage" column="pal_stere_percentage" javaType="java.math.BigDecimal"/>
+        <result property="palMtPercentage" column="pal_mt_percentage" javaType="java.math.BigDecimal"/>
+        <result property="createrId" column="creater_id" javaType="java.lang.Integer"/>
+        <result property="createTime" column="create_time" javaType="java.util.Date"/>
+        <result property="companyId" column="company_id" javaType="java.lang.Integer"/>
+        <result property="status" column="status" javaType="java.lang.Byte"/>
+        <result property="sourceId" column="source_id" javaType="java.lang.Long"/>
+        <result property="correctionFactor" column="correction_factor" javaType="java.lang.Byte"/>
+        <result property="principal" column="principal" javaType="java.lang.String"/>
+    </resultMap>
+    <resultMap id="ComputingVo" type="com.oket.ccic.vo.ComputingLogVo" extends="ComputingLogBase">
+        <result property="companyName" column="company_name" javaType="java.lang.String"/>
+        <result property="username" column="username" javaType="java.lang.String"/>
+        <collection property="computingLogContents" ofType="com.oket.ccic.entity.ComputingLogContent">
+            <result property="id" column="cid" javaType="java.lang.Long"/>
+            <result property="computingLogBaseId" column="computing_log_base_id" javaType="java.lang.Long"/>
+            <result property="tankId" column="tank_id" javaType="java.lang.Integer"/>
+            <result property="tankNo" column="tank_no" javaType="java.lang.String"/>
+            <result property="tankHeight" column="tank_height" javaType="java.math.BigDecimal"/>
+            <result property="tankType" column="tank_type" javaType="java.lang.Byte"/>
+            <result property="isCorrection" column="is_correction" javaType="java.lang.Byte"/>
+            <result property="computingFloaterWeightFirst" column="computing_floater_weight_first"
+                    javaType="java.math.BigDecimal"/>
+            <result property="staticPressureDensity" column="static_pressure_density"
+                    javaType="java.math.BigDecimal"/>
+            <result property="densityFirst" column="density_first" javaType="java.math.BigDecimal"/>
+            <result property="densityLast" column="density_last" javaType="java.math.BigDecimal"/>
+            <result property="levelFirst" column="level_first" javaType="java.math.BigDecimal"/>
+            <result property="levelLast" column="level_last" javaType="java.math.BigDecimal"/>
+            <result property="liquidTemperatureFirst" column="liquid_temperature_first"
+                    javaType="java.math.BigDecimal"/>
+            <result property="liquidTemperatureLast" column="liquid_temperature_last" javaType="java.math.BigDecimal"/>
+            <result property="lowLevelHeightFirst" column="low_level_height_first" javaType="java.math.BigDecimal"/>
+            <result property="lowLevelHeightLast" column="low_level_height_last" javaType="java.math.BigDecimal"/>
+            <result property="lowLevelVolumeFirst" column="low_level_volume_first" javaType="java.math.BigDecimal"/>
+            <result property="lowLevelVolumeLast" column="low_level_volume_last" javaType="java.math.BigDecimal"/>
+            <result property="vcfFirst" column="vcf_first" javaType="java.math.BigDecimal"/>
+            <result property="vcfLast" column="vcf_last" javaType="java.math.BigDecimal"/>
+            <result property="waterFirst" column="water_first" javaType="java.math.BigDecimal"/>
+            <result property="waterLast" column="water_last" javaType="java.math.BigDecimal"/>
+            <result property="impurityFirst" column="impurity_first" javaType="java.math.BigDecimal"/>
+            <result property="impurityLast" column="impurity_last" javaType="java.math.BigDecimal"/>
+            <result property="environmentTemperatureFirst" column="environment_temperature_first"
+                    javaType="java.lang.String"/>
+            <result property="environmentTemperatureLast" column="environment_temperature_last"
+                    javaType="java.lang.String"/>
+            <result property="pipelineVolumeFirst" column="pipeline_volume_first" javaType="java.math.BigDecimal"/>
+            <result property="pipelineVolumeLast" column="pipeline_volume_last" javaType="java.math.BigDecimal"/>
+            <result property="dateFirst" column="date_first" javaType="java.sql.Date"/>
+            <result property="dateLast" column="date_last" javaType="java.sql.Date"/>
+            <result property="timeFirst" column="time_first" javaType="java.sql.Time"/>
+            <result property="timeLast" column="time_last" javaType="java.sql.Time"/>
+            <result property="remark" column="remark" javaType="java.lang.String"/>
+            <result property="verificationDate" column="verificationDate" javaType="java.lang.String"/>
+            <result property="computingFloaterWeightLast" column="computing_floater_weight_last"
+                    javaType="java.math.BigDecimal"/>
+        </collection>
+    </resultMap>
+    <resultMap id="ComputingLogContent" type="com.oket.ccic.entity.ComputingLogContent">
+        <result property="id" column="id" javaType="java.lang.Long"/>
+        <result property="computingLogBaseId" column="computing_log_base_id" javaType="java.lang.Long"/>
+        <result property="tankId" column="tank_id" javaType="java.lang.Integer"/>
+        <result property="tankNo" column="tank_no" javaType="java.lang.String"/>
+        <result property="tankHeight" column="tank_height" javaType="java.math.BigDecimal"/>
+        <result property="tankType" column="tank_type" javaType="java.lang.Byte"/>
+        <result property="isCorrection" column="is_correction" javaType="java.lang.Byte"/>
+        <result property="computingFloaterWeightFirst" column="computing_floater_weight_first"
+                javaType="java.math.BigDecimal"/>
+        <result property="staticPressureDensity" column="static_pressure_density"
+                javaType="java.math.BigDecimal"/>
+        <result property="densityFirst" column="density_first" javaType="java.math.BigDecimal"/>
+        <result property="densityLast" column="density_last" javaType="java.math.BigDecimal"/>
+        <result property="levelFirst" column="level_first" javaType="java.math.BigDecimal"/>
+        <result property="levelLast" column="level_last" javaType="java.math.BigDecimal"/>
+        <result property="liquidTemperatureFirst" column="liquid_temperature_first"
+                javaType="java.math.BigDecimal"/>
+        <result property="liquidTemperatureLast" column="liquid_temperature_last" javaType="java.math.BigDecimal"/>
+        <result property="lowLevelHeightFirst" column="low_level_height_first" javaType="java.math.BigDecimal"/>
+        <result property="lowLevelHeightLast" column="low_level_height_last" javaType="java.math.BigDecimal"/>
+        <result property="lowLevelVolumeFirst" column="low_level_volume_first" javaType="java.math.BigDecimal"/>
+        <result property="lowLevelVolumeLast" column="low_level_volume_last" javaType="java.math.BigDecimal"/>
+        <result property="vcfFirst" column="vcf_first" javaType="java.math.BigDecimal"/>
+        <result property="vcfLast" column="vcf_last" javaType="java.math.BigDecimal"/>
+        <result property="waterFirst" column="water_first" javaType="java.math.BigDecimal"/>
+        <result property="waterLast" column="water_last" javaType="java.math.BigDecimal"/>
+        <result property="impurityFirst" column="impurity_first" javaType="java.math.BigDecimal"/>
+        <result property="impurityLast" column="impurity_last" javaType="java.math.BigDecimal"/>
+        <result property="environmentTemperatureFirst" column="environment_temperature_first"
+                javaType="java.lang.String"/>
+        <result property="environmentTemperatureLast" column="environment_temperature_last"
+                javaType="java.lang.String"/>
+        <result property="pipelineVolumeFirst" column="pipeline_volume_first" javaType="java.math.BigDecimal"/>
+        <result property="pipelineVolumeLast" column="pipeline_volume_last" javaType="java.math.BigDecimal"/>
+        <result property="dateFirst" column="date_first" javaType="java.sql.Date"/>
+        <result property="dateLast" column="date_last" javaType="java.sql.Date"/>
+        <result property="timeFirst" column="time_first" javaType="java.sql.Time"/>
+        <result property="timeLast" column="time_last" javaType="java.sql.Time"/>
+        <result property="remark" column="remark" javaType="java.lang.String"/>
+        <result property="verificationDate" column="verificationDate" javaType="java.lang.String"/>
+        <result property="computingFloaterWeightLast" column="computing_floater_weight_last"
+                javaType="java.math.BigDecimal"/>
+    </resultMap>
+    <insert id="addComputingLogBase" keyProperty="id" useGeneratedKeys="true">
+        insert into pw_computing_log_base ( verification_no, ship_name, oil_name,
+        verification_address_id,verification_address_name, vcf_method, type,type2,
+        bucket, stere, metric_ton,
+        long_ton, pal_stere, pal_mt, pal_stere_percentage, pal_mt_percentage,creater_id, create_time,
+        company_id, status, source_id, correction_factor, principal
+        )
+        values (#{computingLogBase.verificationNo,jdbcType=VARCHAR}, #{computingLogBase.shipName,jdbcType=VARCHAR}, #{computingLogBase.oilName,jdbcType=VARCHAR},
+        #{computingLogBase.verificationAddressId,jdbcType=VARCHAR},#{computingLogBase.verificationAddressName,jdbcType=VARCHAR}, #{computingLogBase.vcfMethod,jdbcType=VARCHAR}, #{computingLogBase.type,jdbcType=TINYINT},#{computingLogBase.type2,jdbcType=TINYINT},
+        #{computingLogBase.bucket,jdbcType=INTEGER}, #{computingLogBase.stere,jdbcType=DECIMAL}, #{computingLogBase.metricTon,jdbcType=DECIMAL},
+        #{computingLogBase.longTon,jdbcType=DECIMAL},#{computingLogBase.palStere,jdbcType=DECIMAL},#{computingLogBase.palMt,jdbcType=DECIMAL},#{computingLogBase.palSterePercentage,jdbcType=DECIMAL},#{computingLogBase.palMtPercentage,jdbcType=DECIMAL},
+        #{computingLogBase.createrId,jdbcType=INTEGER}, #{computingLogBase.createTime,jdbcType=TIMESTAMP},
+        #{computingLogBase.companyId,jdbcType=INTEGER},#{computingLogBase.status,jdbcType=TINYINT},#{computingLogBase.sourceId,jdbcType=BIGINT},
+        #{computingLogBase.correctionFactor,jdbcType=TINYINT},#{computingLogBase.principal,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="saveComputingLogContents">
+        insert into pw_computing_log_content (
+        computing_log_base_id,tank_id,tank_no,tank_height,tank_type,is_correction,computing_floater_weight_first,static_pressure_density,
+        density_first,density_last,level_first,level_last,
+        liquid_temperature_first,liquid_temperature_last,low_level_height_first,low_level_height_last,
+        low_level_volume_first,low_level_volume_last,vcf_first,vcf_last,water_first,water_last,
+        impurity_first,impurity_last,environment_temperature_first,environment_temperature_last,
+        pipeline_volume_first,pipeline_volume_last,date_first,date_last,
+        time_first,time_last,remark,verificationDate,computing_floater_weight_last) values
+        <foreach collection="computingLogContents" item="content" separator=",">
+            (#{content.computingLogBaseId,jdbcType=BIGINT},#{content.tankId,jdbcType=INTEGER},#{content.tankNo,jdbcType=VARCHAR},#{content.tankHeight,jdbcType=DECIMAL},
+            #{content.tankType,jdbcType=TINYINT},#{content.isCorrection,jdbcType=TINYINT},#{content.computingFloaterWeightFirst,jdbcType=DECIMAL},#{content.staticPressureDensity,jdbcType=DECIMAL},
+            #{content.densityFirst,jdbcType=DECIMAL},#{content.densityLast,jdbcType=DECIMAL},#{content.levelFirst,jdbcType=DECIMAL},#{content.levelLast,jdbcType=DECIMAL},
+            #{content.liquidTemperatureFirst,jdbcType=DECIMAL},#{content.liquidTemperatureLast,jdbcType=DECIMAL},#{content.lowLevelHeightFirst,jdbcType=DECIMAL},#{content.lowLevelHeightLast,jdbcType=DECIMAL},
+            #{content.lowLevelVolumeFirst,jdbcType=DECIMAL},#{content.lowLevelVolumeLast,jdbcType=DECIMAL},#{content.vcfFirst,jdbcType=DECIMAL},#{content.vcfLast,jdbcType=DECIMAL},#{content.waterFirst,jdbcType=DECIMAL},#{content.waterLast,jdbcType=DECIMAL},
+            #{content.impurityFirst,jdbcType=DECIMAL},#{content.impurityLast,jdbcType=DECIMAL},#{content.environmentTemperatureFirst,jdbcType=VARCHAR},#{content.environmentTemperatureLast,jdbcType=VARCHAR},
+            #{content.pipelineVolumeFirst,jdbcType=DECIMAL},#{content.pipelineVolumeLast,jdbcType=DECIMAL},#{content.dateFirst,jdbcType=DATE},#{content.dateLast,jdbcType=DATE},
+            #{content.timeFirst,jdbcType=TIME},#{content.timeLast,jdbcType=TIME},#{content.remark,jdbcType=VARCHAR},#{content.verificationDate,jdbcType=VARCHAR},#{content.computingFloaterWeightLast,jdbcType=DECIMAL})
+        </foreach>
+    </insert>
+    <update id="updateStatus">
+        update pw_computing_log_base set status = #{status} where id = #{computingLogBaseId}
+    </update>
+    <select id="getPage" resultMap="ComputingVo">
+        select pclb.*,pclc.*,pclc.id as cid,c.company_name as company_name,u.username as username
+        from (
+        select * from pw_computing_log_base
+        <where>
+            <if test="verificationNo !=null and verificationNo !='' ">
+                and verification_no like concat('%',#{verificationNo},'%')
+            </if>
+            <if test="startTime !=null">
+                and create_time <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime !=null">
+                and create_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+            <if test="status !=null">
+                and status = #{status}
+            </if>
+            <if test="companyId !=null">
+                and company_id = #{companyId}
+            </if>
+            <if test="type !=null">
+                and type = #{type}
+            </if>
+            <if test="type2 !=null">
+                and type2 = #{type2}
+            </if>
+            <if test="shipName!=null">
+                and ship_name like CONCAT('%',#{shipName},'%')
+            </if>
+            <if test="principal!=null">
+                and principal like CONCAT('%',#{principal},'%')
+            </if>
+            <if test="pageNum!=null and pageSize!=null">
+                limit #{pageNum},#{pageSize}
+            </if>
+        </where>
+        ) pclb
+        left join pw_computing_log_content pclc on pclb.id = pclc.computing_log_base_id
+        left join bd_company c on c.id = pclb.company_id
+        left join bd_user u on pclb.creater_id = u.id
+        order by pclb.create_time desc
+    </select>
+    <select id="getPageTotal" resultType="java.lang.Long">
+        select count(*) from pw_computing_log_base pclb
+        where 1=1
+        <if test="verificationNo !=null and verificationNo !='' ">
+            and pclb.verification_no like concat('%',#{verificationNo},'%')
+        </if>
+        <if test="startTime !=null">
+            and pclb.create_time <![CDATA[ >= ]]> #{startTime}
+        </if>
+        <if test="endTime !=null">
+            and pclb.create_time <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="status !=null">
+            and pclb.status = #{status}
+        </if>
+        <if test="principal!=null">
+            and principal like CONCAT('%',#{principal},'%')
+        </if>
+        <if test="shipName!=null">
+            and ship_name like CONCAT('%',#{shipName},'%')
+        </if>
+    </select>
+    <select id="getComputingLogContentById" resultMap="ComputingLogContent">
+        select * from pw_computing_log_content where id = #{computingLogContentId}
+    </select>
+    <select id="getComputingLogById" resultMap="ComputingVo">
+        select pclb.*,pclc.*,pclc.id as cid,c.company_name as company_name,u.username as username
+        from pw_computing_log_base pclb
+        left join pw_computing_log_content pclc on pclb.id = pclc.computing_log_base_id
+        left join bd_company c on c.id = pclb.company_id
+        left join bd_user u on pclb.creater_id = u.id
+        where pclb.id = #{computingLogBaseId}
+    </select>
+</mapper>

@@ -1,0 +1,77 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /ccic
+spring:
+  #数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.0.233:3306/ccic?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: oket2020
+    #237数据库配置
+    #    url: jdbc:mysql://192.168.0.237:3336/ccic?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&zeroDateTimeBehavior=convertToNull
+    #    username: root
+    #    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      #druid 数据源专有配置
+      # 初始化大小，最小，最大
+      initialSize: 5
+      minIdle: 5
+      maxActive: 50
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 用来检测连接是否有效的sql，要求是一个查询语句
+      validationQuery: SELECT 1 FROM DUAL
+      # 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
+      testWhileIdle: true
+      # 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+      testOnBorrow: false
+      # 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+      testOnReturn: false
+      # 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭
+      poolPreparedStatements: false
+  #邮件配置
+  mail:
+    # 邮件服务地址
+    host: smtp.163.com
+    # 端口
+    port: 465
+    # 编码格式
+    default-encoding: utf-8
+    # 用户名
+    username: ccichd1802@163.com
+    # 授权码
+    #  POP3/SMTP
+    password: APVWRMBZLXUNTKFY
+    # 其它参数
+    properties:
+      mail:
+        smtp:
+          # 如果是用 SSL 方式，需要配置如下属性
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: true
+#扫描xml文件的位置
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+#日志配置
+logging:
+  config:
+    classpath: /logback-spring.xml
+#游客公司id
+visitorCompanyId: 1
+#游客角色id
+visitorRoleId: 7
+#登录网址
+customLoginUrl: http://123.234.22.85:83/#/login
+

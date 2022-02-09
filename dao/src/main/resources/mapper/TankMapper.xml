@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oket.ccic.mapper.TankMapper">
+    <resultMap id="Tank" type="com.oket.ccic.entity.Tank">
+        <result property="id" column="id" javaType="java.lang.Integer"/>
+        <result property="tankNo" column="tank_no" javaType="java.lang.String"/>
+        <result property="height" column="height" javaType="java.math.BigDecimal"/>
+        <result property="tankFieldId" column="tank_field_id" javaType="java.lang.Integer"/>
+        <result property="keepWarm" column="keep_warm" javaType="java.lang.Byte"/>
+        <result property="status" column="status" javaType="java.lang.Byte"/>
+        <result property="companyId" column="company_id" javaType="java.lang.Integer"/>
+    </resultMap>
+    <resultMap id="TankVo" type="com.oket.ccic.vo.TankVo" extends="Tank">
+        <result property="companyName" column="company_name" javaType="java.lang.String"/>
+        <result property="tankFieldName" column="tank_field_name" javaType="java.lang.String"/>
+    </resultMap>
+    <insert id="addTank">
+        insert into bd_tank ( tank_no, tank_field_id, keep_warm, status, company_id, height
+        )
+        values (#{tank.tankNo,jdbcType=VARCHAR}, #{tank.tankFieldId,jdbcType=INTEGER}, #{tank.keepWarm,jdbcType=TINYINT},
+        #{tank.status,jdbcType=TINYINT}, #{tank.companyId,jdbcType=INTEGER}, #{tank.height,jdbcType=DECIMAL}
+        )
+    </insert>
+    <update id="updateTank">
+        update bd_tank
+        <set>
+            <if test="tank.tankNo != null">
+                tank_no = #{tank.tankNo,jdbcType=VARCHAR},
+            </if>
+            <if test="tank.tankFieldId != null">
+                tank_field_id = #{tank.tankFieldId,jdbcType=INTEGER},
+            </if>
+            <if test="tank.keepWarm != null">
+                keep_warm = #{tank.keepWarm,jdbcType=TINYINT},
+            </if>
+            <if test="tank.height != null">
+                height = #{tank.height,jdbcType=DECIMAL},
+            </if>
+            <if test="tank.companyId != null">
+                company_id = #{tank.companyId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{tank.id,jdbcType=INTEGER}
+    </update>
+    <update id="updateStatusByTankId">
+        update bd_tank
+        set status = #{status,jdbcType=TINYINT}
+        where id = #{tankId,jdbcType=INTEGER}
+    </update>
+    <select id="getPage" resultMap="TankVo">
+        select t.*,c.company_name as company_name,tf.tank_field_name as tank_field_name
+        from bd_tank t
+        left join bd_company c on t.company_id = c.id
+        left join bd_tank_field tf on t.tank_field_id = tf.id
+        where 1=1
+        <if test="companyId !=null">
+            and t.company_id = #{companyId}
+        </if>
+        <if test="tankFieldId !=null">
+            and t.tank_field_id = #{tankFieldId}
+        </if>
+        <if test="pageNum!=null and pageSize!=null">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+    <select id="getPageTotal" resultType="java.lang.Long">
+        select count(*) from bd_tank t where 1=1
+        <if test="companyId !=null">
+            and t.company_id = #{companyId}
+        </if>
+        <if test="tankFieldId !=null">
+            and t.tank_field_id = #{tankFieldId}
+        </if>
+    </select>
+</mapper>

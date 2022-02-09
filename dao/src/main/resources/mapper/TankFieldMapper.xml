@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oket.ccic.mapper.TankFieldMapper">
+    <resultMap id="TankField" type="com.oket.ccic.entity.TankField">
+        <result property="id" column="id" javaType="java.lang.Integer"/>
+        <result property="tankFieldName" column="tank_field_name" javaType="java.lang.String"/>
+        <result property="tankFieldAddress" column="tank_field_address" javaType="java.lang.String"/>
+        <result property="tankFieldPrincipal" column="tank_field_principal" javaType="java.lang.String"/>
+        <result property="tankFieldPhone" column="tank_field_phone" javaType="java.lang.String"/>
+        <result property="status" column="status" javaType="java.lang.Byte"/>
+        <result property="companyId" column="company_id" javaType="java.lang.Integer"/>
+    </resultMap>
+    <resultMap id="TankFieldVo" type="com.oket.ccic.vo.TankFieldVo" extends="TankField">
+        <result property="companyName" column="company_name" javaType="java.lang.String"/>
+    </resultMap>
+    <insert id="addTankField">
+        insert into bd_tank_field ( tank_field_name, tank_field_address,
+        tank_field_principal, tank_field_phone, status, company_id
+        )
+        values (#{tankField.tankFieldName,jdbcType=VARCHAR}, #{tankField.tankFieldAddress,jdbcType=VARCHAR}, #{tankField.tankFieldPrincipal,jdbcType=VARCHAR},
+        #{tankField.tankFieldPhone,jdbcType=VARCHAR}, #{tankField.status,jdbcType=TINYINT}, #{tankField.companyId,jdbcType=INTEGER}
+        )
+    </insert>
+    <update id="updateTankField">
+        update bd_tank_field
+        <set>
+            <if test="tankField.tankFieldName != null">
+                tank_field_name = #{tankField.tankFieldName,jdbcType=VARCHAR},
+            </if>
+            <if test="tankField.tankFieldAddress != null">
+                tank_field_address = #{tankField.tankFieldAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="tankField.tankFieldPrincipal != null">
+                tank_field_principal = #{tankField.tankFieldPrincipal,jdbcType=VARCHAR},
+            </if>
+            <if test="tankField.tankFieldPhone != null">
+                tank_field_phone = #{tankField.tankFieldPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="tankField.companyId != null">
+                company_id = #{tankField.companyId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{tankField.id,jdbcType=INTEGER}
+    </update>
+    <update id="updateTankFieldByTankFieldId">
+        update bd_tank_field
+        set status = #{status,jdbcType=TINYINT}
+        where id = #{tankFieldId,jdbcType=INTEGER}
+    </update>
+    <select id="getPage" resultMap="TankFieldVo">
+        select tf.*,c.company_name as company_name from bd_tank_field tf
+        left join bd_company c on tf.company_id = c.id
+        where 1=1
+        <if test="tankFieldName !=null and tankFieldName!=''">
+            and tf.tank_field_name like concat('%',#{tankFieldName},'%')
+        </if>
+        <if test="companyId !=null">
+            and tf.company_id = #{companyId}
+        </if>
+        <if test="pageNum!=null and pageSize!=null">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+    <select id="getPageTotal" resultType="java.lang.Long">
+        select count(*) from bd_tank_field tf where 1=1
+        <if test="tankFieldName !=null and tankFieldName!=''">
+            and tf.tank_field_name like concat('%',#{tankFieldName},'%')
+        </if>
+    </select>
+</mapper>

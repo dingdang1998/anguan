@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oket.ccic.mapper.PermissionMapper">
+    <resultMap id="Permission" type="com.oket.ccic.entity.Permission">
+        <result property="id" column="id" javaType="java.lang.Integer"/>
+        <result property="menuCode" column="menu_code" javaType="java.lang.String"/>
+        <result property="menuName" column="menu_name" javaType="java.lang.String"/>
+        <result property="permissionCode" column="permission_code" javaType="java.lang.String"/>
+        <result property="permissionName" column="permission_name" javaType="java.lang.String"/>
+    </resultMap>
+    <select id="getPermissionsByUserId" resultMap="Permission">
+    SELECT
+        p.*
+    FROM
+        bd_user u
+        LEFT JOIN bd_user_role ur ON u.id = ur.user_id
+        LEFT JOIN bd_role r ON r.id = ur.role_id
+        LEFT JOIN bd_role_permission rp ON r.id = rp.role_id
+        LEFT JOIN bd_permission p ON rp.permission_id = p.id
+    WHERE
+        u.id = #{userId}
+    </select>
+</mapper>

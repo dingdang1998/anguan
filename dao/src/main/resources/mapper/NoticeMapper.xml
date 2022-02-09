@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oket.ccic.mapper.NoticeMapper">
+    <resultMap id="Notice" type="com.oket.ccic.entity.Notice">
+        <result property="id" column="id" javaType="java.lang.Integer"/>
+        <result property="content" column="content" javaType="java.lang.String"/>
+        <result property="createTime" column="create_time" javaType="java.util.Date"/>
+        <result property="status" column="status" javaType="java.lang.Byte"/>
+    </resultMap>
+    <insert id="addNotice">
+        insert into pw_notice ( content, create_time, status
+        )
+        values (#{notice.content,jdbcType=VARCHAR}, #{notice.createTime,jdbcType=TIMESTAMP}, #{notice.status,jdbcType=TINYINT}
+        )
+    </insert>
+    <update id="update">
+        update pw_notice
+        <set>
+            <if test="notice.content != null">
+                content = #{notice.content,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{notice.id,jdbcType=INTEGER}
+    </update>
+    <update id="updateNoticeStatus">
+        update pw_notice
+        set status = #{status,jdbcType=TINYINT}
+        where id = #{noticeId,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteNotice">
+        delete from pw_notice where id = #{noticeId}
+    </delete>
+    <select id="get" resultMap="Notice">
+        select n.* from pw_notice n
+        where 1=1
+        <if test="startTime != null">
+            and n.create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="endTime != null">
+            and n.create_time <![CDATA[<=]]> #{endTime}
+        </if>
+        <if test="status != null">
+            and n.status = #{status}
+        </if>
+        order by n.status desc
+    </select>
+</mapper>

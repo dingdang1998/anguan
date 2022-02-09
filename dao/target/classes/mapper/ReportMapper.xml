@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oket.ccic.mapper.ReportMapper">
+    <resultMap id="ReportBase" type="com.oket.ccic.entity.ReportBase">
+        <result property="id" column="id" javaType="java.lang.Long"/>
+        <result property="shipName" column="ship_name" javaType="java.lang.String"/>
+        <result property="oilName" column="oil_name" javaType="java.lang.String"/>
+        <result property="verificationNo" column="verification_no" javaType="java.lang.String"/>
+        <result property="principal" column="principal" javaType="java.lang.String"/>
+        <result property="verificationAddress" column="verification_address" javaType="java.lang.String"/>
+        <result property="billedWeight" column="billed_weight" javaType="java.lang.String"/>
+        <result property="first" column="first" javaType="java.lang.String"/>
+        <result property="last" column="last" javaType="java.lang.String"/>
+        <result property="sounding" column="sounding" javaType="java.lang.Byte"/>
+        <result property="thermometry" column="thermometry" javaType="java.lang.Byte"/>
+        <result property="inspectionBasisIds" column="inspection_basis_ids" javaType="java.lang.String"/>
+        <result property="remark" column="remark" javaType="java.lang.String"/>
+        <result property="createrId" column="creater_id" javaType="java.lang.Integer"/>
+        <result property="createTime" column="create_time" javaType="java.util.Date"/>
+        <result property="companyId" column="company_id" javaType="java.lang.Integer"/>
+        <result property="computingLogBaseId" column="computing_log_base_id" javaType="java.lang.Long"/>
+        <result property="status" column="status" javaType="java.lang.Byte"/>
+        <result property="type" column="type" javaType="java.lang.Byte"/>
+    </resultMap>
+    <resultMap id="ReportVo" type="com.oket.ccic.vo.ReportVo" extends="ReportBase">
+        <result property="companyName" column="company_name" javaType="java.lang.String"/>
+        <result property="username" column="username" javaType="java.lang.String"/>
+        <collection property="reportContents" ofType="com.oket.ccic.entity.ReportContent">
+            <result property="id" column="cid" javaType="java.lang.Long"/>
+            <result property="reportBaseId" column="report_base_id" javaType="java.lang.Long"/>
+            <result property="tankNo" column="tank_no" javaType="java.lang.String"/>
+            <result property="tableVerificationNo" column="table_verification_no" javaType="java.lang.String"/>
+            <result property="soundToolNo" column="sound_tool_no" javaType="java.lang.String"/>
+            <result property="soundToolVerificationNo" column="sound_tool_verification_no" javaType="java.lang.String"/>
+            <result property="thermometryToolNo" column="thermometry_tool_no" javaType="java.lang.String"/>
+            <result property="thermometryToolVerificationNo" column="thermometry_tool_verification_no"
+                    javaType="java.lang.String"/>
+        </collection>
+    </resultMap>
+    <insert id="addReportBase" keyProperty="id" useGeneratedKeys="true">
+        insert into pw_report_base ( ship_name, oil_name, verification_no, principal,
+        verification_address, billed_weight, first, last, sounding, thermometry,inspection_basis_ids,
+        remark, creater_id, create_time, company_id, computing_log_base_id, status,type
+        )
+        values (#{reportBase.shipName,jdbcType=VARCHAR}, #{reportBase.oilName,jdbcType=VARCHAR}, #{reportBase.verificationNo,jdbcType=VARCHAR}, #{reportBase.principal,jdbcType=VARCHAR},
+        #{reportBase.verificationAddress,jdbcType=VARCHAR},#{reportBase.billedWeight,jdbcType=VARCHAR}, #{reportBase.first,jdbcType=VARCHAR}, #{reportBase.last,jdbcType=VARCHAR},#{reportBase.sounding,jdbcType=TINYINT},
+        #{reportBase.thermometry,jdbcType=TINYINT},#{reportBase.inspectionBasisIds,jdbcType=VARCHAR}, #{reportBase.remark,jdbcType=VARCHAR},
+        #{reportBase.createrId,jdbcType=INTEGER}, #{reportBase.createTime,jdbcType=TIMESTAMP},#{reportBase.companyId,jdbcType=INTEGER}, #{reportBase.computingLogBaseId,jdbcType=BIGINT},#{reportBase.status,jdbcType=TINYINT},
+        #{reportBase.type,jdbcType=TINYINT}
+        )
+    </insert>
+    <insert id="addReportContents">
+        insert into pw_report_content (
+        report_base_id,tank_no,table_verification_no,sound_tool_no,
+        sound_tool_verification_no,thermometry_tool_no,thermometry_tool_verification_no) values
+        <foreach collection="reportContents" item="content" separator=",">
+            (#{content.reportBaseId,jdbcType=BIGINT},#{content.tankNo,jdbcType=VARCHAR},#{content.tableVerificationNo,jdbcType=VARCHAR},#{content.soundToolNo,jdbcType=VARCHAR},
+            #{content.soundToolVerificationNo,jdbcType=VARCHAR},#{content.thermometryToolNo,jdbcType=VARCHAR},#{content.thermometryToolVerificationNo,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+    <select id="getPage" resultMap="ReportVo">
+        select rb.*,rc.*,rc.id as cid,c.company_name as company_name,u.username as username
+        from
+        (
+        select * from pw_report_base
+        <where>
+            <if test="verificationNo !=null and verificationNo !=''">
+                and verification_no like concat('%',#{verificationNo},'%')
+            </if>
+            <if test="startTime !=null">
+                and create_time <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime !=null">
+                and create_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+            <if test="companyId !=null">
+                and company_id = #{companyId}
+            </if>
+            <if test="shipName!=null">
+                and ship_name like CONCAT('%',#{shipName},'%')
+            </if>
+            <if test="principal!=null">
+                and principal like CONCAT('%',#{principal},'%')
+            </if>
+            <if test="pageNum != null and pageSize != null">
+                limit #{pageNum},#{pageSize}
+            </if>
+        </where>
+        ) rb
+        left join pw_report_content rc on rb.id = rc.report_base_id
+        left join bd_company c on c.id = rb.company_id
+        left join bd_user u on rb.creater_id = u.id
+    </select>
+    <select id="getPageTotal" resultType="java.lang.Long">
+        select count(*) from pw_report_base rb
+        <where>
+            <if test="verificationNo !=null and verificationNo !=''">
+                and rb.verification_no like concat('%',#{verificationNo},'%')
+            </if>
+            <if test="startTime !=null">
+                and rb.create_time <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime !=null">
+                and rb.create_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+            <if test="companyId !=null">
+                and company_id = #{companyId}
+            </if>
+            <if test="shipName!=null">
+                and ship_name like CONCAT('%',#{shipName},'%')
+            </if>
+            <if test="principal!=null">
+                and principal like CONCAT('%',#{principal},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

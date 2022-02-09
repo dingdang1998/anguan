@@ -1,0 +1,12 @@
+com\oket\ccic\mapper\NoticeMapper.class
+com\oket\ccic\mapper\TankFieldMapper.class
+com\oket\ccic\mapper\PermissionMapper.class
+com\oket\ccic\mapper\DocumentInfoMapper.class
+com\oket\ccic\mapper\TableMapper.class
+com\oket\ccic\mapper\TankMapper.class
+com\oket\ccic\mapper\ComputingLogMapper.class
+com\oket\ccic\mapper\ReportMapper.class
+com\oket\ccic\mapper\UserMapper.class
+com\oket\ccic\mapper\TestingToolMapper.class
+com\oket\ccic\mapper\CompanyMapper.class
+com\oket\ccic\mapper\SampleReportMapper.class

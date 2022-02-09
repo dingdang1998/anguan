@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oket.ccic.mapper.SampleReportMapper">
+    <resultMap id="SampleReportBase" type="com.oket.ccic.entity.SampleReportBase">
+        <result property="id" column="id" javaType="java.lang.Long"/>
+        <result property="verificationNo" column="verification_no" javaType="java.lang.String"/>
+        <result property="shipName" column="ship_name" javaType="java.lang.String"/>
+        <result property="oilName" column="oil_name" javaType="java.lang.String"/>
+        <result property="verificationAddress" column="verification_address" javaType="java.lang.String"/>
+        <result property="verificationDate" column="verification_date" javaType="java.util.Date"/>
+        <result property="samplingStandard" column="sampling_standard" javaType="java.lang.String"/>
+        <result property="weather" column="weather" javaType="java.lang.Byte"/>
+        <result property="createrId" column="creater_id" javaType="java.lang.Integer"/>
+        <result property="createTime" column="create_time" javaType="java.util.Date"/>
+        <result property="companyId" column="company_id" javaType="java.lang.Integer"/>
+        <result property="status" column="status" javaType="java.lang.Byte"/>
+        <result property="principal" column="principal" javaType="java.lang.String"/>
+    </resultMap>
+    <resultMap id="SampleReportVo" type="com.oket.ccic.vo.SampleReportVo" extends="SampleReportBase">
+        <result property="companyName" column="company_name" javaType="java.lang.String"/>
+        <result property="username" column="username" javaType="java.lang.String"/>
+        <collection property="sampleReportContents" ofType="com.oket.ccic.entity.SampleReportContent">
+            <result property="id" column="cid" javaType="java.lang.Long"/>
+            <result property="sampleReportBaseId" column="sample_report_base_id" javaType="java.lang.Long"/>
+            <result property="status" column="content_status" javaType="java.lang.String"/>
+            <result property="source" column="source" javaType="java.lang.String"/>
+            <result property="goal" column="goal" javaType="java.lang.String"/>
+            <result property="amount" column="amount" javaType="java.lang.String"/>
+            <result property="category" column="category" javaType="java.lang.String"/>
+            <result property="sampleCategory" column="sample_category" javaType="java.lang.String"/>
+            <result property="signNo" column="sign_no" javaType="java.lang.String"/>
+        </collection>
+    </resultMap>
+    <insert id="addSampleReportBase" keyProperty="id" useGeneratedKeys="true">
+        insert into pw_sample_report_base ( verification_no, ship_name, oil_name,
+        verification_address, verification_date, sampling_standard,
+        weather, creater_id, create_time, company_id, status,principal
+        )
+        values (#{sampleReportBase.verificationNo,jdbcType=VARCHAR}, #{sampleReportBase.shipName,jdbcType=VARCHAR}, #{sampleReportBase.oilName,jdbcType=VARCHAR},
+        #{sampleReportBase.verificationAddress,jdbcType=VARCHAR}, #{sampleReportBase.verificationDate,jdbcType=TIMESTAMP}, #{sampleReportBase.samplingStandard,jdbcType=VARCHAR},
+        #{sampleReportBase.weather,jdbcType=TINYINT}, #{sampleReportBase.createrId,jdbcType=INTEGER}, #{sampleReportBase.createTime,jdbcType=TIMESTAMP},
+        #{sampleReportBase.companyId,jdbcType=INTEGER}, #{sampleReportBase.status,jdbcType=TINYINT}, #{sampleReportBase.principal,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="addSampleReportContents">
+        insert into pw_sample_report_content (
+        sample_report_base_id,status,source,goal,
+        amount,category,sample_category,sign_no) values
+        <foreach collection="sampleReportContents" item="content" separator=",">
+            (#{content.sampleReportBaseId,jdbcType=BIGINT},#{content.status,jdbcType=VARCHAR},#{content.source,jdbcType=VARCHAR},#{content.goal,jdbcType=VARCHAR},
+            #{content.amount,jdbcType=VARCHAR},#{content.category,jdbcType=VARCHAR},#{content.sampleCategory,jdbcType=VARCHAR},#{content.signNo,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+    <select id="getPage" resultMap="SampleReportVo">
+        select srb.*,src.*,src.id as cid,c.company_name as company_name,u.username as username,src.status as
+        content_status
+        from
+        (
+        select * from pw_sample_report_base
+        <where>
+            <if test="verificationNo !=null">
+                and verification_no like concat('%',#{verificationNo},'%')
+            </if>
+            <if test="startTime !=null">
+                and create_time <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime !=null">
+                and create_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+            <if test="companyId !=null">
+                and company_id = #{companyId}
+            </if>
+            <if test="shipName!=null">
+                and ship_name like CONCAT('%',#{shipName},'%')
+            </if>
+            <if test="principal!=null">
+                and principal like CONCAT('%',#{principal},'%')
+            </if>
+            <if test="pageNum!=null and pageSize!=null">
+                limit #{pageNum},#{pageSize}
+            </if>
+        </where>
+        ) srb
+        left join pw_sample_report_content src on srb.id = src.sample_report_base_id
+        left join bd_company c on c.id = srb.company_id
+        left join bd_user u on srb.creater_id = u.id
+    </select>
+    <select id="getPageTotal" resultType="java.lang.Long">
+        select count(*) from pw_sample_report_base srb
+        <where>
+            <if test="verificationNo !=null">
+                and srb.verification_no like concat('%',#{verificationNo},'%')
+            </if>
+            <if test="startTime !=null">
+                and srb.create_time <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime !=null">
+                and srb.create_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+            <if test="companyId !=null">
+                and company_id = #{companyId}
+            </if>
+            <if test="shipName!=null">
+                and ship_name like CONCAT('%',#{shipName},'%')
+            </if>
+            <if test="principal!=null">
+                and principal like CONCAT('%',#{principal},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

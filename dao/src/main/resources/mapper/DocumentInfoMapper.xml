@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oket.ccic.mapper.DocumentInfoMapper">
+    <resultMap id="DocumentInfo" type="com.oket.ccic.entity.DocumentInfo">
+        <result property="id" column="id" javaType="java.lang.Long"/>
+        <result property="content" column="content" javaType="java.lang.String"/>
+        <result property="type" column="type" javaType="java.lang.Byte"/>
+        <result property="companyId" column="company_id" javaType="java.lang.Integer"/>
+    </resultMap>
+    <insert id="addDocumentInfo">
+        insert into pw_document_info ( content, type, company_id )
+        values (#{documentInfo.content,jdbcType=VARCHAR}, #{documentInfo.type,jdbcType=TINYINT}, #{documentInfo.companyId,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="addDocumentInfos">
+        insert into pw_document_info(content, type, company_id ) values
+        <foreach collection="documentInfos" item="item" separator=",">
+            (#{item.content,jdbcType=VARCHAR}, #{item.type,jdbcType=TINYINT},
+            #{item.companyId,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+    <update id="update">
+        update pw_document_info
+        <set>
+            <if test="documentInfo.content != null">
+                content = #{documentInfo.content,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{documentInfo.id,jdbcType=BIGINT}
+    </update>
+    <delete id="delete">
+        delete from pw_document_info  where id = #{documentId}
+    </delete>
+    <delete id="deleteDocumentInfosByCompanyId">
+        delete from pw_document_info where company_id = #{companyId} and type in (0,1,2,4,5,6,7)
+    </delete>
+    <select id="get" resultMap="DocumentInfo">
+        select pdi.*
+        from pw_document_info pdi
+        where pdi.company_id = #{companyId}
+    </select>
+</mapper>
